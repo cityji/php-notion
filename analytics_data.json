@@ -1,15 +1,15 @@
 {
     "timeSpent": {
-        "today": 2527,
+        "today": 3204,
         "yesterday": 0,
-        "week": 1153,
-        "month": 1153,
-        "lastUpdate": 1739864158,
+        "week": 1830,
+        "month": 1830,
+        "lastUpdate": 1739865100,
         "hourlyStats": {
-            "7": 1153
+            "7": 1830
         },
         "dailyStats": {
-            "2025-02-18": 1153
+            "2025-02-18": 1830
         }
     },
     "activeInstances": {
@@ -70,8 +70,8 @@
         "averageSessionLength": 1739856778.5008125,
         "longestSession": 1739863419,
         "peakHours": {
-            "7": 757
+            "7": 1434
         },
-        "lastActive": 1739864158
+        "lastActive": 1739865100
     }
 }

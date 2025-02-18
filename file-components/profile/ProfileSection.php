@@ -12,68 +12,96 @@ class ProfileSection {
         $stats = $this->analytics->getFormattedStats();
         ob_start();
         ?>
-        <div class="profile-section h-100">
+        <div class="dashboard-container">
+            <!-- Background Texture -->
+            <div class="texture-overlay"></div>
+
             <!-- Header -->
-            <div class="px-4 py-4 border-bottom" style="background: var(--bg-subtle);">
-                <h3 class="mb-0 h4 fw-semibold">Analytics Dashboard</h3>
+            <div class="dashboard-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0 h4 fw-semibold text-gradient">Analytics Dashboard</h3>
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-sm btn-light-subtle" onclick="refreshDashboard()">
+                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light-subtle ms-2" onclick="exportAnalytics()">
+                            <i class="bi bi-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div class="date-range-selector mt-3">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-light active" data-range="day">Today</button>
+                        <button type="button" class="btn btn-light" data-range="week">Week</button>
+                        <button type="button" class="btn btn-light" data-range="month">Month</button>
+                        <button type="button" class="btn btn-light" data-range="custom">
+                            <i class="bi bi-calendar3"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
             
             <!-- Analytics Content -->
-            <div class="analytics-content overflow-auto" style="height: calc(100vh - 60px);">
+            <div class="analytics-content">
                 <div class="p-4">
                     <div class="row g-4">
                         <!-- Overview Cards -->
                         <div class="col-12">
                             <div class="row g-4">
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card border-0 shadow-md h-100 overflow-hidden" 
-                                         style="background: linear-gradient(135deg, var(--primary-main), var(--primary-dark)); transition: var(--transition);">
+                                    <div class="stat-card primary">
                                         <div class="card-body position-relative">
-                                            <div class="position-absolute top-0 end-0 opacity-10">
-                                                <i class="bi bi-clock display-4"></i>
+                                            <div class="card-bg-icon">
+                                                <i class="bi bi-clock"></i>
                                             </div>
-                                            <h6 class="text-white opacity-75 mb-2">Today's Activity</h6>
+                                            <h6>Today's Activity</h6>
                                             <div class="d-flex align-items-baseline">
-                                                <h3 class="display-4 mb-0 me-2 text-white fw-bold"><?php echo $stats['timeSpent']['today']; ?></h3>
-                                                <small class="text-white opacity-75">hours</small>
+                                                <h3 class="display-4 mb-0 me-2"><?php echo $stats['timeSpent']['today']; ?></h3>
+                                                <small>hours</small>
                                             </div>
-                                            <div class="mt-3 text-white opacity-75">
+                                            <div class="mt-3">
                                                 <?php echo $stats['fileActivity']['dailyEdits'][date('Y-m-d')] ?? 0; ?> edits today
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card border-0 shadow-md h-100" style="transition: var(--transition);">
+                                    <div class="stat-card success">
                                         <div class="card-body">
-                                            <h6 class="text-secondary mb-2">Current Streak</h6>
+                                            <div class="card-bg-icon">
+                                                <i class="bi bi-calendar-check"></i>
+                                            </div>
+                                            <h6>Current Streak</h6>
                                             <div class="d-flex align-items-center">
-                                                <h3 class="display-4 mb-0 me-2 fw-bold"><?php echo $stats['productivity']['currentStreak']; ?></h3>
-                                                <div class="text-success">
+                                                <h3 class="display-4 mb-0 me-2"><?php echo $stats['productivity']['currentStreak']; ?></h3>
+                                                <div>
                                                     <i class="bi bi-calendar-check"></i>
                                                     <small>days</small>
                                                 </div>
                                             </div>
-                                            <div class="mt-2 text-secondary">
+                                            <div class="mt-2">
                                                 Longest: <?php echo $stats['productivity']['longestStreak']; ?> days
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card border-0 shadow-md h-100" style="transition: var(--transition);">
+                                    <div class="stat-card info">
                                         <div class="card-body">
-                                            <h6 class="text-secondary mb-2">Total Files</h6>
+                                            <div class="card-bg-icon">
+                                                <i class="bi bi-files"></i>
+                                            </div>
+                                            <h6>Total Files</h6>
                                             <div class="d-flex align-items-baseline">
-                                                <h3 class="display-4 mb-0 me-2 fw-bold"><?php echo $stats['fileActivity']['totalFiles']; ?></h3>
-                                                <small class="text-secondary">files</small>
+                                                <h3 class="display-4 mb-0 me-2"><?php echo $stats['fileActivity']['totalFiles']; ?></h3>
+                                                <small>files</small>
                                             </div>
                                             <div class="mt-3 d-flex align-items-center gap-3">
-                                                <span class="text-primary fw-medium">
+                                                <span class="badge">
                                                     <i class="bi bi-markdown"></i>
                                                     <?php echo $stats['fileActivity']['fileTypes']['md']; ?> md
                                                 </span>
-                                                <span class="text-secondary">
+                                                <span class="badge">
                                                     <i class="bi bi-file-text"></i>
                                                     <?php echo $stats['fileActivity']['fileTypes']['txt']; ?> txt
                                                 </span>
@@ -82,14 +110,17 @@ class ProfileSection {
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-md-6">
-                                    <div class="card border-0 shadow-md h-100" style="transition: var(--transition);">
+                                    <div class="stat-card warning">
                                         <div class="card-body">
-                                            <h6 class="text-secondary mb-2">Total Edits</h6>
-                                            <div class="d-flex align-items-baseline">
-                                                <h3 class="display-4 mb-0 me-2 fw-bold"><?php echo $stats['fileActivity']['totalEdits']; ?></h3>
-                                                <small class="text-secondary">edits</small>
+                                            <div class="card-bg-icon">
+                                                <i class="bi bi-pencil"></i>
                                             </div>
-                                            <div class="mt-3 text-secondary">
+                                            <h6>Total Edits</h6>
+                                            <div class="d-flex align-items-baseline">
+                                                <h3 class="display-4 mb-0 me-2"><?php echo $stats['fileActivity']['totalEdits']; ?></h3>
+                                                <small>edits</small>
+                                            </div>
+                                            <div class="mt-3">
                                                 <i class="bi bi-pencil"></i>
                                                 <?php echo number_format($stats['fileActivity']['wordCount']); ?> words
                                             </div>
@@ -101,15 +132,18 @@ class ProfileSection {
 
                         <!-- Activity Over Time -->
                         <div class="col-xl-8">
-                            <div class="card border-0 shadow-md" style="transition: var(--transition);">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h4 class="card-title h5 fw-semibold mb-0">Activity Timeline</h4>
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <button type="button" class="btn btn-light active fw-medium" onclick="updateTimeline('week')">Week</button>
-                                            <button type="button" class="btn btn-light fw-medium" onclick="updateTimeline('month')">Month</button>
+                            <div class="analytics-card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title">Activity Timeline</h4>
+                                        <div class="card-actions">
+                                            <button type="button" class="btn btn-sm btn-icon" onclick="toggleFullscreen(this)">
+                                                <i class="bi bi-fullscreen"></i>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="card-body">
                                     <div class="chart-container" style="height: 300px;">
                                         <canvas id="activityTimeline"></canvas>
                                     </div>
@@ -119,9 +153,18 @@ class ProfileSection {
 
                         <!-- Peak Hours -->
                         <div class="col-xl-4">
-                            <div class="card border-0 shadow-md h-100" style="transition: var(--transition);">
+                            <div class="analytics-card h-100">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title">Peak Hours</h4>
+                                        <div class="card-actions">
+                                            <button type="button" class="btn btn-sm btn-icon" onclick="toggleFullscreen(this)">
+                                                <i class="bi bi-fullscreen"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-body">
-                                    <h4 class="card-title h5 fw-semibold mb-4">Peak Activity Hours</h4>
                                     <div class="chart-container" style="height: 300px;">
                                         <canvas id="peakHoursChart"></canvas>
                                     </div>
@@ -131,21 +174,30 @@ class ProfileSection {
 
                         <!-- Most Active Files -->
                         <div class="col-xl-6">
-                            <div class="card border-0 shadow-md" style="transition: var(--transition);">
+                            <div class="analytics-card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title">Most Active Files</h4>
+                                        <div class="card-actions">
+                                            <button type="button" class="btn btn-sm btn-icon" onclick="toggleTableView(this)">
+                                                <i class="bi bi-grid"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-body">
-                                    <h4 class="card-title h5 fw-semibold mb-4">Most Active Files</h4>
                                     <div class="table-responsive">
-                                        <table class="table table-hover align-middle">
+                                        <table class="table table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th class="border-bottom border-2">File</th>
-                                                    <th class="text-center border-bottom border-2">Edits</th>
-                                                    <th class="border-bottom border-2">Last Modified</th>
+                                                    <th>File</th>
+                                                    <th class="text-center">Edits</th>
+                                                    <th>Last Modified</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($stats['fileActivity']['mostActive'] as $file): ?>
-                                                <tr>
+                                                <tr class="animate-row">
                                                     <td>
                                                         <div class="d-flex align-items-center">
                                                             <?php if (str_ends_with($file['filename'], '.md')): ?>
@@ -157,12 +209,15 @@ class ProfileSection {
                                                         </div>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span class="badge bg-primary bg-opacity-10 text-primary px-2 rounded-pill">
+                                                        <span class="badge badge-soft-primary">
                                                             <?php echo $file['editCount']; ?>
                                                         </span>
                                                     </td>
-                                                    <td class="text-secondary">
-                                                        <?php echo date('M d, H:i', $file['lastEdit']); ?>
+                                                    <td>
+                                                        <div class="d-flex align-items-center text-secondary">
+                                                            <i class="bi bi-clock me-1"></i>
+                                                            <?php echo date('M d, H:i', $file['lastEdit']); ?>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach; ?>
@@ -175,14 +230,26 @@ class ProfileSection {
 
                         <!-- Recent Activity -->
                         <div class="col-xl-6">
-                            <div class="card border-0 shadow-md" style="transition: var(--transition);">
+                            <div class="analytics-card">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h4 class="card-title">Recent Activity</h4>
+                                        <div class="activity-filter">
+                                            <select class="form-select form-select-sm">
+                                                <option value="all">All Actions</option>
+                                                <option value="create">Created</option>
+                                                <option value="edit">Edited</option>
+                                                <option value="delete">Deleted</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-body">
-                                    <h4 class="card-title h5 fw-semibold mb-4">Recent Activity</h4>
                                     <div class="table-responsive">
-                                        <table class="table table-hover align-middle mb-0">
+                                        <table class="table table-hover mb-0">
                                             <tbody>
                                                 <?php foreach ($stats['fileActivity']['recentEdits'] as $activity): ?>
-                                                <tr>
+                                                <tr class="animate-row" data-action="<?php echo $activity['action']; ?>">
                                                     <td style="width: 45px;">
                                                         <?php 
                                                             $actionIcon = match($activity['action']) {
@@ -207,8 +274,11 @@ class ProfileSection {
                                                             <?php echo ucfirst($activity['action']); ?>
                                                         </small>
                                                     </td>
-                                                    <td class="text-end text-secondary">
-                                                        <?php echo date('M d, H:i', $activity['timestamp']); ?>
+                                                    <td class="text-end">
+                                                        <div class="d-flex align-items-center justify-content-end text-secondary">
+                                                            <i class="bi bi-clock me-1"></i>
+                                                            <?php echo date('M d, H:i', $activity['timestamp']); ?>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <?php endforeach; ?>
@@ -224,33 +294,284 @@ class ProfileSection {
         </div>
 
         <style>
-            .card {
-                border-radius: 0.75rem;
+            /* Dashboard Container */
+            .dashboard-container {
+                position: relative;
+                min-height: 100vh;
+                background: linear-gradient(135deg, var(--bg-white), var(--bg-subtle));
+                overflow-x: hidden;
             }
-            .card:hover {
+
+            /* Texture Overlay */
+            .texture-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                pointer-events: none;
+                opacity: 0.4;
+                background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            }
+
+            /* Dashboard Header */
+            .dashboard-header {
+                padding: 1.5rem 2rem;
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid var(--border);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .text-gradient {
+                background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            /* Stat Cards */
+            .stat-card {
+                border-radius: 1rem;
+                border: none;
+                overflow: hidden;
+                transition: var(--transition);
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .stat-card:hover {
+                transform: translateY(-4px);
+            }
+
+            .stat-card .card-body {
+                padding: 1.5rem;
+            }
+
+            .card-bg-icon {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                font-size: 3rem;
+                opacity: 0.1;
+                transform: rotate(-15deg);
+                transition: var(--transition);
+            }
+
+            .stat-card:hover .card-bg-icon {
+                transform: rotate(0) scale(1.1);
+                opacity: 0.15;
+            }
+
+            .stat-card h6 {
+                color: var(--text-secondary);
+                font-weight: 500;
+                margin-bottom: 0.75rem;
+            }
+
+            /* Analytics Cards */
+            .analytics-card {
+                border-radius: 1rem;
+                border: none;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                box-shadow: var(--shadow-md);
+                transition: var(--transition);
+            }
+
+            .analytics-card:hover {
                 transform: translateY(-2px);
             }
-            .table > :not(:first-child) {
-                border-top: none;
+
+            .analytics-card .card-header {
+                background: transparent;
+                border-bottom: 1px solid var(--border);
+                padding: 1.25rem 1.5rem;
             }
-            .table td {
-                padding: 1rem;
-                border-color: var(--border);
+
+            .analytics-card .card-title {
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--text-primary);
+                margin: 0;
             }
+
+            /* Tables */
+            .table {
+                margin: 0;
+            }
+
             .table th {
-                padding: 1rem;
+                background: var(--bg-subtle);
                 font-weight: 600;
                 color: var(--text-secondary);
-                background: var(--bg-subtle);
+                padding: 1rem;
+                border-bottom: 2px solid var(--border);
             }
-            .shadow-md {
-                box-shadow: var(--shadow-md);
+
+            .table td {
+                padding: 1rem;
+                vertical-align: middle;
+                border-color: var(--border);
+            }
+
+            .animate-row {
+                animation: fadeIn 0.3s ease-out;
+            }
+
+            /* Badges */
+            .badge-soft-primary {
+                background: var(--primary-light);
+                color: var(--primary-main);
+                font-weight: 500;
+                padding: 0.5em 1em;
+            }
+
+            /* Buttons */
+            .btn-light-subtle {
+                background: rgba(255, 255, 255, 0.8);
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+                transition: var(--transition);
+            }
+
+            .btn-light-subtle:hover {
+                background: var(--bg-subtle);
+                color: var(--text-primary);
+                transform: translateY(-1px);
+            }
+
+            .btn-icon {
+                width: 32px;
+                height: 32px;
+                padding: 0;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0.5rem;
+                background: transparent;
+                color: var(--text-secondary);
+                border: 1px solid var(--border);
+            }
+
+            .btn-icon:hover {
+                background: var(--bg-subtle);
+                color: var(--text-primary);
+            }
+
+            /* Card Variations */
+            .stat-card.primary {
+                background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
+                color: white;
+            }
+            
+            .stat-card.success {
+                background: linear-gradient(135deg, #059669, #047857);
+                color: white;
+            }
+            
+            .stat-card.info {
+                background: linear-gradient(135deg, #3B82F6, #2563EB);
+                color: white;
+            }
+            
+            .stat-card.warning {
+                background: linear-gradient(135deg, #F59E0B, #D97706);
+                color: white;
+            }
+
+            .stat-card.primary h6,
+            .stat-card.success h6,
+            .stat-card.info h6,
+            .stat-card.warning h6 {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            /* Additional Animations */
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+
+            /* Table Card View */
+            .table-cards tr {
+                display: block;
+                margin-bottom: 1rem;
+                background: var(--bg-subtle);
+                border-radius: 0.5rem;
+                padding: 1rem;
+            }
+
+            .table-cards td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: none;
+                padding: 0.5rem 0;
+            }
+
+            .table-cards td:before {
+                content: attr(data-label);
+                font-weight: 600;
+                margin-right: 1rem;
+            }
+
+            /* Fullscreen Mode */
+            .analytics-card.fullscreen {
+                background: var(--bg-white);
+                padding: 2rem;
+                animation: scaleIn 0.3s ease-out;
+            }
+
+            .analytics-card.fullscreen .chart-container {
+                height: calc(100vh - 200px) !important;
+            }
+
+            @keyframes scaleIn {
+                from { transform: scale(0.95); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
+
+            /* Responsive Adjustments */
+            @media (max-width: 768px) {
+                .dashboard-header {
+                    padding: 1rem;
+                }
+
+                .analytics-card {
+                    margin-bottom: 1rem;
+                }
+
+                .stat-card .card-body {
+                    padding: 1rem;
+                }
+
+                .table td, .table th {
+                    padding: 0.75rem;
+                }
             }
         </style>
 
-        <!-- Initialize Charts -->
+        <!-- Dashboard Functionality -->
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                initializeCharts();
+                initializeAnimations();
+                setupEventListeners();
+            });
+
+            function initializeCharts() {
                 // Activity Timeline Chart
                 const timelineCtx = document.getElementById('activityTimeline').getContext('2d');
                 const timelineData = <?php echo json_encode($stats['dailyStats']); ?>;
@@ -276,6 +597,10 @@ class ProfileSection {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart'
+                        },
                         interaction: {
                             intersect: false,
                             mode: 'index'
@@ -323,7 +648,7 @@ class ProfileSection {
                     }
                 });
 
-                // Peak Hours Chart
+                // Peak Hours Chart with enhanced styling
                 const peakHoursCtx = document.getElementById('peakHoursChart').getContext('2d');
                 const hourlyStats = <?php echo json_encode($stats['hourlyStats']); ?>;
                 
@@ -346,6 +671,10 @@ class ProfileSection {
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeInOutQuart'
+                        },
                         interaction: {
                             intersect: false,
                             mode: 'index'
@@ -395,21 +724,92 @@ class ProfileSection {
                         }
                     }
                 });
+            }
 
-                window.updateTimeline = function(range) {
-                    const days = range === 'week' ? 7 : 30;
-                    activityChart.data.labels = Object.keys(timelineData).slice(-days);
-                    activityChart.data.datasets[0].data = Object.values(timelineData)
-                        .slice(-days)
-                        .map(seconds => seconds / 3600);
-                    activityChart.update();
-
-                    // Update button states
-                    document.querySelectorAll('.btn-group .btn').forEach(btn => {
-                        btn.classList.toggle('active', btn.innerText.toLowerCase() === range);
+            function initializeAnimations() {
+                // Animate stat cards on scroll
+                const cards = document.querySelectorAll('.stat-card, .analytics-card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
                     });
-                };
-            });
+                }, { threshold: 0.1 });
+
+                cards.forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease-out';
+                    observer.observe(card);
+                });
+            }
+
+            function setupEventListeners() {
+                // Date range selector
+                document.querySelectorAll('[data-range]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        updateDateRange(btn.dataset.range);
+                    });
+                });
+
+                // Activity filter
+                document.querySelector('.activity-filter select').addEventListener('change', function() {
+                    const filter = this.value;
+                    document.querySelectorAll('[data-action]').forEach(row => {
+                        row.style.display = (filter === 'all' || row.dataset.action === filter) ? '' : 'none';
+                    });
+                });
+            }
+
+            function toggleFullscreen(button) {
+                const card = button.closest('.analytics-card');
+                card.classList.toggle('fullscreen');
+                if (card.classList.contains('fullscreen')) {
+                    card.style.position = 'fixed';
+                    card.style.top = '0';
+                    card.style.left = '0';
+                    card.style.width = '100vw';
+                    card.style.height = '100vh';
+                    card.style.zIndex = '1050';
+                    button.innerHTML = '<i class="bi bi-fullscreen-exit"></i>';
+                } else {
+                    card.style.position = '';
+                    card.style.top = '';
+                    card.style.left = '';
+                    card.style.width = '';
+                    card.style.height = '';
+                    card.style.zIndex = '';
+                    button.innerHTML = '<i class="bi bi-fullscreen"></i>';
+                }
+            }
+
+            function toggleTableView(button) {
+                const table = button.closest('.analytics-card').querySelector('.table');
+                table.classList.toggle('table-cards');
+                button.innerHTML = table.classList.contains('table-cards') ? 
+                    '<i class="bi bi-list"></i>' : 
+                    '<i class="bi bi-grid"></i>';
+            }
+
+            function refreshDashboard() {
+                const button = document.querySelector('button[onclick="refreshDashboard()"]');
+                button.disabled = true;
+                button.innerHTML = '<i class="bi bi-arrow-clockwise animate-spin"></i> Refreshing...';
+                
+                // Simulate refresh with animation
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+
+            function exportAnalytics() {
+                // Implementation for analytics export
+                console.log('Exporting analytics...');
+            }
         </script>
         <?php
         return ob_get_clean();
