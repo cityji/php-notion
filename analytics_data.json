@@ -1,0 +1,77 @@
+{
+    "timeSpent": {
+        "today": 2527,
+        "yesterday": 0,
+        "week": 1153,
+        "month": 1153,
+        "lastUpdate": 1739864158,
+        "hourlyStats": {
+            "7": 1153
+        },
+        "dailyStats": {
+            "2025-02-18": 1153
+        }
+    },
+    "activeInstances": {
+        "count": 0,
+        "sessions": []
+    },
+    "fileActivity": {
+        "totalFiles": 0,
+        "recentEdits": [
+            {
+                "filename": "hello3.txt",
+                "action": "edit",
+                "timestamp": 1739864100,
+                "extension": "txt"
+            },
+            {
+                "filename": "notes.md",
+                "action": "edit",
+                "timestamp": 1739864021,
+                "extension": "md"
+            },
+            {
+                "filename": "index.md",
+                "action": "edit",
+                "timestamp": 1739863419,
+                "extension": "md"
+            }
+        ],
+        "mostActive": [
+            {
+                "filename": "index.md",
+                "editCount": 1,
+                "lastEdit": 1739863419
+            },
+            {
+                "filename": "notes.md",
+                "editCount": 1,
+                "lastEdit": 1739864021
+            },
+            {
+                "filename": "hello3.txt",
+                "editCount": 1,
+                "lastEdit": 1739864100
+            }
+        ],
+        "totalEdits": 3,
+        "dailyEdits": {
+            "2025-02-18": 3
+        },
+        "wordCount": 3,
+        "characterCount": 16,
+        "fileTypes": {
+            "md": 0,
+            "txt": 0
+        }
+    },
+    "productivity": {
+        "averageSessionLength": 1739856778.5008125,
+        "longestSession": 1739863419,
+        "peakHours": {
+            "7": 757
+        },
+        "lastActive": 1739864158
+    }
+}
